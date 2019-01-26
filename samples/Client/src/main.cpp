@@ -5,14 +5,11 @@ namespace Net = simpleNET;
 
 int main(int argc, char **argv)
 {
+    // Init
+    SimpleNetInit();
+
     // Test purpose
     cout << "I'm the CLIENT" << endl;
-
-
-    #if defined _WIN32
-        // Test defined flags
-        cout << TEST_SHARED_WINDOWS << endl;
-    #endif
 
 
     // Test lib import
@@ -20,6 +17,8 @@ int main(int argc, char **argv)
     Net::Client aClient;
     Net::Server aServer;
 
+    // Clean
+    SimpleNetCleanup();
 
     return 0;
 }
