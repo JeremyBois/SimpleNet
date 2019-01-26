@@ -82,8 +82,4 @@
 #endif
 
 
-
-using std::cout;
-using std::endl;
-
 #endif

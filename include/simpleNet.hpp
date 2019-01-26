@@ -13,18 +13,18 @@ namespace simpleNET
     bool SimpleNetInit()
     {
     #if defined _WIN32 && !defined __MINGW32__
-        cout << "Build using : " << BUILD_WITH << endl;
+        std::cout << "Build using : " << BUILD_WITH << std::endl;
         WSAData data;
         if (WSAStartup(MAKEWORD(2, 2), &data) != 0)
         {
             WSACleanup();
             return false;
         }
-        cout << "Initialization done" << endl;
+        std::cout << "Initialization done" << std::endl;
         return true;
     #else
-        cout << "Build using : " << BUILD_WITH << endl;
-        cout << "Initialization done automatically" << endl;
+        std::cout << "Build using : " << BUILD_WITH << std::endl;
+        std::cout << "Initialization done automatically" << std::endl;
         return true;
     #endif
     }

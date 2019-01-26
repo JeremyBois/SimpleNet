@@ -1,4 +1,6 @@
 #include "simpleNET.hpp"
+#include <iostream>
+
 
 namespace Net = simpleNET;
 
@@ -9,7 +11,7 @@ int main(int argc, char **argv)
     Net::SimpleNetInit();
 
     // Test purpose
-    cout << "I'm the CLIENT" << endl;
+    std::cout << "I'm the CLIENT" << std::endl;
 
 
     // Test lib import
