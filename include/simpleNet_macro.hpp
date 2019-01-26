@@ -12,13 +12,13 @@
         #define SIMPLENET_HELPER_DLL_IMPORT __attribute__((visibility("default")))
         #define SIMPLENET_HELPER_DLL_EXPORT __attribute__((visibility("default")))
         #define SIMPLENET_HELPER_DLL_LOCAL __attribute__((visibility("hidden")))
-        #define TEST_SHARED_WINDOWS "MINGW"
+        #define BUILD_WITH "MINGW"
     #else
     // Microsoft
         #define SIMPLENET_HELPER_DLL_IMPORT __declspec(dllimport)
         #define SIMPLENET_HELPER_DLL_EXPORT __declspec(dllexport)
         #define SIMPLENET_HELPER_DLL_LOCAL
-        #define TEST_SHARED_WINDOWS "WINDOWS"
+        #define BUILD_WITH "MSVC"
         #endif
     #else
     #if defined __GNUC__ >= 4
@@ -26,6 +26,7 @@
         #define SIMPLENET_HELPER_DLL_IMPORT __attribute__((visibility("default")))
         #define SIMPLENET_HELPER_DLL_EXPORT __attribute__((visibility("default")))
         #define SIMPLENET_HELPER_DLL_LOCAL __attribute__((visibility("hidden")))
+        #define BUILD_WITH "GCC"
     #else
         // GCC does not support __attribute__ before version 4.
         #define SIMPLENET_HELPER_DLL_IMPORT

@@ -6,7 +6,7 @@ namespace Net = simpleNET;
 int main(int argc, char **argv)
 {
     // Init
-    SimpleNetInit();
+    Net::SimpleNetInit();
 
     // Test purpose
     cout << "I'm the CLIENT" << endl;
@@ -18,7 +18,7 @@ int main(int argc, char **argv)
     Net::Server aServer;
 
     // Clean
-    SimpleNetCleanup();
+    Net::SimpleNetCleanup();
 
     return 0;
 }

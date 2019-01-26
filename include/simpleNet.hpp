@@ -7,33 +7,37 @@
 #include "Socket.hpp"
 
 
-// Windows stuff needed for socket initialization
-bool SimpleNetInit()
+namespace simpleNET
 {
-#if defined _WIN32 && !defined __MINGW32__
-    cout << "Build on : " << TEST_SHARED_WINDOWS << endl;
-    WSAData data;
-    if (WSAStartup(MAKEWORD(2, 2), &data) != 0)
+    // Windows stuff needed for socket initialization
+    bool SimpleNetInit()
     {
-        WSACleanup();
-        return false;
+    #if defined _WIN32 && !defined __MINGW32__
+        cout << "Build using : " << BUILD_WITH << endl;
+        WSAData data;
+        if (WSAStartup(MAKEWORD(2, 2), &data) != 0)
+        {
+            WSACleanup();
+            return false;
+        }
+        cout << "Initialization done" << endl;
+        return true;
+    #else
+        cout << "Build using : " << BUILD_WITH << endl;
+        cout << "Initialization done automatically" << endl;
+        return true;
+    #endif
     }
-    cout << "Initialization done" << endl;
-    return true;
-#else
-    cout << "Build on : " << TEST_SHARED_WINDOWS << endl;
-    cout << "Initialization done automatically" << endl;
-    return true;
-#endif
-}
 
-void SimpleNetCleanup()
-{
-#if defined _WIN32 && !defined __MINGW32__
+    void SimpleNetCleanup()
+    {
+    #if defined _WIN32 && !defined __MINGW32__
         WSACleanup();
-#endif
+    #endif
 
-    // Automatically handle on unix systems
+        // Automatically handle on unix systems
+    }
 }
+
 
 #endif
