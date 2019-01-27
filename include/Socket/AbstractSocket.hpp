@@ -18,13 +18,11 @@ namespace simpleNET
             AbstractSocket(SOCKET socketID);
 
             // Disable copy
-            AbstractSocket(const AbstractSocket &otherSocket) = delete;
+            AbstractSocket(const AbstractSocket &otherSocket)            = delete;
             AbstractSocket &operator=(AbstractSocket const &otherSocket) = delete;
 
             inline void SetID(SOCKET socketID) { _socketID = socketID; }
-            static void DisplayAdresses(const addrinfo *pinfo);
-            static int  GetTCPAdresses(const std::string& ipAdress, int port, addrinfo* &infosContainer);
-            static int  GetUDPAdresses(const std::string& ipAdress, int port, addrinfo* &infosContainer);
+
 
         public:
             // Add move semantic to transfer ownership
@@ -35,7 +33,7 @@ namespace simpleNET
             AbstractSocket &operator=(AbstractSocket &&otherSocket)   noexcept;
             void swap(AbstractSocket &other)                          noexcept;
 
-            virtual ~AbstractSocket() = default;
+            virtual ~AbstractSocket();
 
         public:
             virtual void Init();

@@ -10,11 +10,11 @@ namespace simpleNET
     class SIMPLENET_API Client
     {
         public:
-            Client() = default;
+            Client()          = default;
             virtual ~Client() = default;
 
             // Disable copy
-            Client(const Client& otherClient) = delete;
+            Client(const Client& otherClient)            = delete;
             Client &operator=(Client const &otherClient) = delete;
     };
 

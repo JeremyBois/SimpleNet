@@ -14,7 +14,7 @@ namespace simpleNET
             ClientSocket(std::string const& ipAdress, int port);
 
         protected:
-            bool Connect(const addrinfo* adressInfos);
+            bool Connect(const addrinfo *paddrInfos, addrinfo& usedInfo);
     };
 
 

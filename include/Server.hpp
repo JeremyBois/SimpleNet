@@ -10,11 +10,11 @@ namespace simpleNET
     class SIMPLENET_API Server
     {
         public:
-            Server() = default;
+            Server()          = default;
             virtual ~Server() = default;
 
             // Disable copy
-            Server(const Server& otherServer) = delete;
+            Server(const Server& otherServer)            = delete;
             Server &operator=(Server const &otherServer) = delete;
     };
 

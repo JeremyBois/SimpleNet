@@ -10,8 +10,8 @@ namespace simpleNET
         : SimpleSocket(INVALID_SOCKET)
     {
         // Find informations
-        struct addrinfo *servinfo;
-        int status = GetTCPAdresses(ipAdress, port, servinfo);
+        struct addrinfo *servInfos;
+        int status = Tools::GetTCPAdresses(ipAdress, port, servInfos);
         if  (status != 0)
         {
             fprintf(stderr, "GetTCPAdresses error  (%d)\n",
@@ -20,12 +20,29 @@ namespace simpleNET
         else
         {
             // Debug
-            DisplayAdresses(servinfo);
+            Tools::DisplayAdresses(servInfos);
 
             // Try to connect
-            if (this->Connect(servinfo))
+            addrinfo servInfoUsed = *servInfos;
+            if (this->Connect(servInfos, servInfoUsed))
             {
-                fprintf(stdout, "Connection establised\n");
+                // Extract data from server
+                std::string serverName;
+                std::string servPort;
+                int dwRetval = Tools::GetAdressAndService((sockaddr *)servInfoUsed.ai_addr,
+                                                          sizeof(servInfoUsed),
+                                                          serverName, servPort);
+                if (dwRetval != 0)
+                {
+                    fprintf(stderr, "getnameinfo failed with error # %ld\n",
+                            Tools::GetLastErrorCodeID());
+                }
+                else
+                {
+                    fprintf(stdout,
+                            "Connection establised with %s (using port %s)\n",
+                            serverName.c_str(), servPort.c_str());
+                }
             }
             else
             {
@@ -36,22 +53,22 @@ namespace simpleNET
         }
 
         // Free memory of linked list
-        if (servinfo != nullptr)
+        if (servInfos != nullptr)
         {
-            freeaddrinfo(servinfo);
+            freeaddrinfo(servInfos);
         }
     }
 
-    bool ClientSocket::Connect(const addrinfo* adressInfos)
+    bool ClientSocket::Connect(const addrinfo *paddrInfos, addrinfo& pusedInfo)
     {
-        const addrinfo *addr;
+        const addrinfo* paddr;
         SOCKET soc;
 
-        for (addr = adressInfos; addr != nullptr; addr = addr->ai_next)
+        for (paddr = paddrInfos; paddr != nullptr; paddr = paddr->ai_next)
         {
-            soc = socket(addr->ai_family,
-                         addr->ai_socktype,
-                         addr->ai_protocol);
+            soc = socket(paddr->ai_family,
+                         paddr->ai_socktype,
+                         paddr->ai_protocol);
 
             if (soc == INVALID_SOCKET)
             {
@@ -62,9 +79,10 @@ namespace simpleNET
             else
             {
                 // Connect
-                if (connect(soc, addr->ai_addr, addr->ai_addrlen) != SOCKET_ERROR)
+                if (connect(soc, paddr->ai_addr, paddr->ai_addrlen) != SOCKET_ERROR)
                 {
                     this->SetID(soc);
+                    pusedInfo = *paddr;
                     return true;
                 }
 

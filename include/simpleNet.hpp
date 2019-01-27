@@ -1,11 +1,11 @@
 #ifndef __SIMPLENET__HPP
 #define __SIMPLENET__HPP
 
-// Network
+// Network (High level API)
 #include "Client.hpp"
 #include "Server.hpp"
 
-// Socket
+// Sockets (low level API)
 #include "Socket/SimpleSocket.hpp"
 #include "Socket/ClientSocket.hpp"
 #include "Socket/ServerSocket.hpp"

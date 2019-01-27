@@ -15,12 +15,14 @@ namespace simpleNET
     class SIMPLENET_API ServerSocket: public AbstractSocket
     {
         public:
-            ServerSocket(int port);
+          ServerSocket(int port);
+          ServerSocket(const std::string& ipAdress, int port);
 
         protected:
             void Listen();
+            void Bind(sockaddr_in& sockAdress);
 
-        public:
+          public:
             SimpleSocket Accept();
 
     };
