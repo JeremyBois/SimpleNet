@@ -3,7 +3,6 @@ bin/
 build/
 lib/
 examples/
-doc/
 
 # Log stuff:
 *.log
