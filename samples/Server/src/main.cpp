@@ -13,9 +13,11 @@ int main(int argc, char **argv)
     std::cout << "I'm the SERVER" << std::endl;
 
     // Test lib import
-    Net::Socket aSocket;
     Net::Client aClient;
     Net::Server aServer;
+
+    Net::ServerSocket mySocket(7777);
+    mySocket.Accept();
 
     // Clean
     Net::SimpleNetCleanup();

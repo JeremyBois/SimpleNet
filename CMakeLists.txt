@@ -53,6 +53,7 @@ message("*** Library will be build as: ${LIB_TYPE}")
 file(
     GLOB
     library_SOURCES
+    src/Socket/*
     src/*
 )
 

@@ -4,7 +4,11 @@
 // Network
 #include "Client.hpp"
 #include "Server.hpp"
-#include "Socket.hpp"
+
+// Socket
+#include "Socket/SimpleSocket.hpp"
+#include "Socket/ClientSocket.hpp"
+#include "Socket/ServerSocket.hpp"
 
 
 namespace simpleNET
@@ -12,7 +16,7 @@ namespace simpleNET
     // Windows stuff needed for socket initialization
     bool SimpleNetInit()
     {
-    #if defined _WIN32 && !defined __MINGW32__
+    #if defined _WIN32
         std::cout << "Build using : " << BUILD_WITH << std::endl;
         WSAData data;
         if (WSAStartup(MAKEWORD(2, 2), &data) != 0)
@@ -31,7 +35,7 @@ namespace simpleNET
 
     void SimpleNetCleanup()
     {
-    #if defined _WIN32 && !defined __MINGW32__
+    #if defined _WIN32
         WSACleanup();
     #endif
 

@@ -55,13 +55,7 @@
 #include <iostream>
 
 // Network
-#ifdef _WIN32
-    #include <winsock2.h>
-    #include "Ws2tcpip.h"
-
-    #pragma comment(lib, "Ws2_32.lib")
-
-#elif defined __unix__
+#if defined __unix__
     #include <sys/types.h>
     #include <sys/socket.h>
     #include <netinet/in.h>
@@ -77,6 +71,11 @@
     typedef struct sockaddr_in SOCKADDR_IN;
     typedef struct sockaddr SOCKADDR;
     typedef struct in_addr IN_ADDR;
+#elif defined _WIN32
+    #include <winsock2.h>
+    #include "Ws2tcpip.h"
+
+    #pragma comment(lib, "Ws2_32.lib")
 #else
     #error Not defined for this platform
 #endif
