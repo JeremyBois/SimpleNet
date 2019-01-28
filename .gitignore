@@ -55,3 +55,6 @@ GitHub.sublime-settings
 .history
 
 # End of https://www.gitignore.io/api/sublimetext,visualstudiocode
+
+### Markdown
+*.html
