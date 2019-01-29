@@ -11,10 +11,12 @@ namespace simpleNET
     class SIMPLENET_API ClientSocket: public SimpleSocket
     {
         public:
-            ClientSocket(std::string const& ipAdress, int port);
+          ClientSocket();
+          bool Connect(std::string const &ipAdress, int port);
 
         protected:
-            bool Connect(const addrinfo *paddrInfos, addrinfo& usedInfo);
+          bool _Connect(const addrinfo *paddrInfos, addrinfo &usedInfo);
+
     };
 
 

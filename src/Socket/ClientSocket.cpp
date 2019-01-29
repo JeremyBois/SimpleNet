@@ -6,13 +6,21 @@
 
 namespace simpleNET
 {
-    ClientSocket::ClientSocket(std::string const &ipAdress, int port)
+    ClientSocket::ClientSocket()
         : SimpleSocket(INVALID_SOCKET)
     {
+    }
+
+    bool ClientSocket::Connect(std::string const &ipAdress, int port)
+    {
+        // Flag controlling state
+        bool connected = false;
+
+
         // Find informations
         struct addrinfo *servInfos;
         int status = Tools::GetTCPAdresses(ipAdress, port, servInfos);
-        if  (status != 0)
+        if (status != 0)
         {
             fprintf(stderr, "GetTCPAdresses error  (%d)\n",
                     Tools::GetLastErrorCodeID());
@@ -24,7 +32,7 @@ namespace simpleNET
 
             // Try to connect
             addrinfo servInfoUsed = *servInfos;
-            if (this->Connect(servInfos, servInfoUsed))
+            if (this->_Connect(servInfos, servInfoUsed))
             {
                 // Extract data from server
                 std::string serverName;
@@ -43,12 +51,14 @@ namespace simpleNET
                             "Connection establised with %s (using port %s)\n",
                             serverName.c_str(), servPort.c_str());
                 }
+
+                connected = true;
             }
             else
             {
-              fprintf(stderr, "Not able to create a connection (%d)\n",
-                      Tools::GetLastErrorCodeID());
-              Close();
+                fprintf(stderr, "Not able to create a connection (%d)\n",
+                        Tools::GetLastErrorCodeID());
+                Close();
             }
         }
 
@@ -57,9 +67,11 @@ namespace simpleNET
         {
             freeaddrinfo(servInfos);
         }
+
+        return connected;
     }
 
-    bool ClientSocket::Connect(const addrinfo *paddrInfos, addrinfo& pusedInfo)
+    bool ClientSocket::_Connect(const addrinfo *paddrInfos, addrinfo& pusedInfo)
     {
         const addrinfo* paddr;
         SOCKET soc;

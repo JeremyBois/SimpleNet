@@ -16,8 +16,13 @@ int main(int argc, char **argv)
     Net::Client aClient;
     Net::Server aServer;
 
+    // Start server and wait for client
     Net::ServerSocket mySocket(7777);
-    mySocket.Accept();
+    if (mySocket.Listen())
+    {
+        mySocket.Accept();
+    }
+
 
     // Clean
     Net::SimpleNetCleanup();

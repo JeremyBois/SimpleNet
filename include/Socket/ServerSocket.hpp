@@ -19,10 +19,10 @@ namespace simpleNET
           ServerSocket(const std::string& ipAdress, int port);
 
         protected:
-            void Listen();
             void Bind(sockaddr_in& sockAdress);
 
           public:
+            bool         Listen();
             SimpleSocket Accept();
 
     };

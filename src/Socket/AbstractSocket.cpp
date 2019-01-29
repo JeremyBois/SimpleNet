@@ -13,7 +13,10 @@ namespace simpleNET
 
     AbstractSocket::~AbstractSocket()
     {
-        Close();
+        if (_socketID != INVALID_SOCKET)
+        {
+            Close();
+        }
     }
 
     // Move semantics
@@ -42,6 +45,7 @@ namespace simpleNET
     {
         // Call close on unix systems
         closesocket(_socketID);
+        _socketID = INVALID_SOCKET;
     }
 
 } // namespace simpleNET

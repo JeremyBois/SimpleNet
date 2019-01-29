@@ -28,7 +28,6 @@ namespace simpleNET
         Bind(sockAdress);
 
         // Now ready to be called
-        Listen();
     }
     ServerSocket::ServerSocket(int port)
         : AbstractSocket(socket(AF_INET, SOCK_STREAM, IPPROTO_TCP))
@@ -38,7 +37,7 @@ namespace simpleNET
         sockAdress.sin_family = AF_INET;
         // Bound to all interfaces (0.0.0.0)
         // https://stackoverflow.com/questions/16508685/understanding-inaddr-any-for-socket-programming
-        sockAdress.sin_addr.s_addr = INADDR_ANY;
+        sockAdress.sin_addr.s_addr = htonl(INADDR_ANY);
         // Handle difference between little-endian and big-endian
         //https://stackoverflow.com/questions/19207745/htons-function-in-socket-programing#19209503
         sockAdress.sin_port = htons(port);
@@ -47,7 +46,6 @@ namespace simpleNET
         Bind(sockAdress);
 
         // Now ready to be called
-        Listen();
     }
 
     void ServerSocket::Bind(sockaddr_in& sockAdress)
@@ -72,14 +70,17 @@ namespace simpleNET
         }
     }
 
-    void ServerSocket::Listen()
+    bool ServerSocket::Listen()
     {
         if  (listen(GetID(), SOMAXCONN))
         {
             fprintf(stderr, "Server Listen error  (%d)\n",
                     Tools::GetLastErrorCodeID());
             Close();
+            return false;
         }
+
+        return true;
     }
 
     SimpleSocket ServerSocket::Accept()
