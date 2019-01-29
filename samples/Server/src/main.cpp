@@ -20,8 +20,18 @@ int main(int argc, char **argv)
     Net::ServerSocket mySocket(7777);
     if (mySocket.Listen())
     {
-        mySocket.Accept();
+        // Init a buffer
+        char buffer[16] = "Bonjour Client.";
+        printf("%s -- sent (size = %d)\n", buffer, strlen(buffer));
+
+        Net::SimpleSocket clientSoc = mySocket.Accept();
+        clientSoc.Send(buffer, strlen(buffer));
     }
+    else
+    {
+        printf("OUPS");
+    }
+
 
 
     // Clean

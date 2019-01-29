@@ -15,8 +15,20 @@ namespace simpleNET
             SimpleSocket(SOCKET socketID);
 
         public:
-            virtual bool Send();
-            virtual bool Receive();
+            virtual int Send(char* buffer, int bufferSize);
+            virtual int Send(char* buffer, int bufferSize,
+                             sockaddr* socAdress, socklen_t socAdressLength);
+            virtual int Receive(char* buffer, int bufferSize);
+            virtual int Receive(char* buffer, int bufferSize,
+                                sockaddr* socAdress, socklen_t* socAdressLength);
+
+        protected:
+            virtual int SendImplementation(char* buffer, int bufferSize,
+                                           sockaddr* socAdress, socklen_t socAdressLength,
+                                           int flags=0);
+            virtual int ReceiveImplementation(char* buffer, int bufferSize,
+                                              sockaddr* socAdress, socklen_t* socAdressLength,
+                                              int flags=0);
     };
 
 } // namespace simpleNET

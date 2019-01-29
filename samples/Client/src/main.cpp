@@ -23,7 +23,15 @@ int main(int argc, char **argv)
 
     // Connect to local server (server must be start first)
     Net::ClientSocket mySocket;
-    mySocket.Connect("127.0.0.1", 7777);
+    if (mySocket.Connect("127.0.0.1", 7777))
+    {
+        // Init a buffer
+        char buffer[16];
+
+        int length = mySocket.Receive(buffer, strlen(buffer));
+
+        printf("Receive: %s \n", buffer);
+    }
 
     // Clean
     Net::SimpleNetCleanup();
