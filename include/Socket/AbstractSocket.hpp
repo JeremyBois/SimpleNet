@@ -17,7 +17,7 @@ namespace simpleNET
             // Can only be created by a children instance
             AbstractSocket(SOCKET socketID);
 
-            // Disable copy
+            // Copy is not allowed
             AbstractSocket(const AbstractSocket &otherSocket)            = delete;
             AbstractSocket &operator=(AbstractSocket const &otherSocket) = delete;
 

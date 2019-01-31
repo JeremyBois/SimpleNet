@@ -54,6 +54,7 @@ file(
     GLOB
     library_SOURCES
     src/Socket/*
+    src/Protocol/*
     src/*
 )
 

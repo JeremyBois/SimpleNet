@@ -10,6 +10,9 @@
 #include "Socket/ClientSocket.hpp"
 #include "Socket/ServerSocket.hpp"
 
+// Protocols
+#include "Protocol/TextProtocol.hpp"
+
 
 namespace simpleNET
 {

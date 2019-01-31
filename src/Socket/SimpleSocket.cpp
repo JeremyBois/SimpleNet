@@ -53,7 +53,7 @@ namespace simpleNET
 
             if (nbCharSent == SOCKET_ERROR)
             {
-                // Handle error code
+                // @TODO Handle error code
                 fprintf(stderr, "Send operation failed (%d / %d sent) with error # %ld\n",
                         dataSent, bufferSize, Tools::GetLastErrorCodeID());
                 break;
@@ -87,7 +87,7 @@ namespace simpleNET
 
             if (nbCharRecv == SOCKET_ERROR)
             {
-                // Handle error code
+                // @TODO Handle error code
                 fprintf(stderr, "Receive operation failed (%d / %d received) with error # %ld\n",
                         dataRead, bufferSize, Tools::GetLastErrorCodeID());
                 break;
@@ -103,9 +103,6 @@ namespace simpleNET
                 remainingCount -= nbCharRecv;
             }
         }
-
-        // Null terminate the string
-        buffer[dataRead] = '\0';
 
         return dataRead;
     }

@@ -13,7 +13,6 @@ int main(int argc, char **argv)
     // Test purpose
     std::cout << "I'm the CLIENT" << std::endl;
 
-
     // Test lib import
     Net::Client aClient;
     Net::Server aServer;
@@ -25,11 +24,14 @@ int main(int argc, char **argv)
     Net::ClientSocket mySocket;
     if (mySocket.Connect("127.0.0.1", 7777))
     {
-        // Init a buffer
-        char buffer[16];
+        // Using Protocol
+        char buffer[2048] {0};
+        Net::TextProtocol myProto(mySocket);
 
-        int length = mySocket.Receive(buffer, strlen(buffer));
+        myProto.Receive(buffer);
+        printf("Receive: %s \n", buffer);
 
+        myProto.Receive(buffer);
         printf("Receive: %s \n", buffer);
     }
 
