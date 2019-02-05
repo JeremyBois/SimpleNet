@@ -13,6 +13,10 @@ namespace simpleNET
         private:
             SOCKET _socketID = INVALID_SOCKET;
 
+            // If _iblockingMode = 0, blocking is enabled;
+            // If _iblockingMode != 0, non-blocking mode is enabled.
+            u_long _iblockingMode;
+
         protected:
             // Can only be created by a children instance
             AbstractSocket(SOCKET socketID);
@@ -21,8 +25,8 @@ namespace simpleNET
             AbstractSocket(const AbstractSocket &otherSocket)            = delete;
             AbstractSocket &operator=(AbstractSocket const &otherSocket) = delete;
 
-            inline void SetID(SOCKET socketID) { _socketID = socketID; }
-
+            inline void  SetID(SOCKET socketID) { _socketID = socketID; }
+            virtual bool SetAsBlocking(bool shouldBlock);
 
         public:
             // Add move semantic to transfer ownership
@@ -38,6 +42,9 @@ namespace simpleNET
         public:
             virtual void Init();
             virtual void Close();
+            bool MarkAsBlocking();
+            bool MarkAsNonBlocking();
+            bool IsBlocking();
 
             inline SOCKET GetID() { return _socketID; }
     };

@@ -2,13 +2,15 @@
 
 #include <string>
 #include <utility>
+#include "Tools.hpp"
 
 
 namespace simpleNET
 {
     AbstractSocket::AbstractSocket(SOCKET socketID)
-        : _socketID(socketID)
+        : _socketID(socketID), _iblockingMode(0)
     {
+        // Default to blocking mode
     }
 
     AbstractSocket::~AbstractSocket()
@@ -46,6 +48,65 @@ namespace simpleNET
         // Call close on unix systems
         closesocket(_socketID);
         _socketID = INVALID_SOCKET;
+    }
+
+    bool AbstractSocket::SetAsBlocking(bool shouldBlock)
+    {
+        // First check for previous mode
+        u_long newMode = shouldBlock ? 0 : 1;
+
+        if (_iblockingMode == newMode)
+        {
+            if (_iblockingMode == 0)
+                fprintf(stderr, "Socket already set as blocking. Nothing done.\n");
+            else
+                fprintf(stderr, "Socket already set as non-blocking. Nothing done.\n");
+            return false;
+        }
+
+        // Start updating state
+        int iResult = SOCKET_ERROR;
+
+    #ifdef _WIN32
+        // https://docs.microsoft.com/en-us/windows/desktop/api/winsock/nf-winsock-ioctlsocket
+        iResult = ioctlsocket(_socketID, FIONBIO, &newMode);
+    #else
+        // Update bitmask to keep other flags
+        const int flags = fcntl(_socketID, F_GETFL, 0);
+        if (flags != SOCKET_ERROR)
+        {
+            iResult = fcntl(_socketID, F_SETFL, shouldBlock ? flags ^ O_NONBLOCK : flags | O_NONBLOCK);
+        }
+    #endif
+
+        // @TODO Handle error messages
+        if (iResult == SOCKET_ERROR)
+        {
+            fprintf(stderr, "Socket blocking state cannot be set due to error # %ld\n",
+                    Tools::GetLastErrorCodeID());
+            return false;
+        }
+        else
+        {
+            _iblockingMode = newMode;
+            return true;
+        }
+
+    }
+
+    bool AbstractSocket::MarkAsBlocking()
+    {
+        return SetAsBlocking(true);
+    }
+
+    bool AbstractSocket::MarkAsNonBlocking()
+    {
+        return SetAsBlocking(false);
+    }
+
+    bool AbstractSocket::IsBlocking()
+    {
+        return _iblockingMode == 0;
     }
 
 } // namespace simpleNET

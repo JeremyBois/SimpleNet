@@ -5,6 +5,8 @@
   - https://c.developpez.com/cours/sockets-c-cpp-demystifies/
   - https://broux.developpez.com/articles/c/sockets/
   - [Guide to network programming](./Guide to Network Programming.pdf)
+  - [Libevent](http://www.wangafu.net/~nickm/libevent-book/01_intro.html)
+
 
 # C++
 ## Standard:

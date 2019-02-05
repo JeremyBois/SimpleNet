@@ -40,6 +40,17 @@ int main(int argc, char **argv)
         // Send another with same protocol
         printf("Send : %s  (size = %d)\n", buffer, strlen(buffer));
         myProto.Send(buffer);
+
+        // Test non-blocking
+        clientSoc.MarkAsNonBlocking();
+        printf("Send : %s  (size = %d)\n", buffer, strlen(buffer));
+        myProto.Send(buffer);
+
+        // Test Blocking
+        clientSoc.MarkAsBlocking();
+        clientSoc.MarkAsBlocking();
+        clientSoc.MarkAsNonBlocking();
+        clientSoc.MarkAsBlocking();
     }
     else
     {

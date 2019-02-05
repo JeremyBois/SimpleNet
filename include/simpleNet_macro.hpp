@@ -57,11 +57,18 @@
 // Network
 #if defined __unix__
     #include <sys/types.h>
+    // For socket functions
     #include <sys/socket.h>
     #include <netinet/in.h>
     #include <arpa/inet.h>
     #include <unistd.h>
     #include <netdb.h>
+
+    // For fcntl
+    #include <fcntl.h>
+    // For select
+    #include <sys/select.h>
+
 
     // Match windows constant and typedef definition
     #define INVALID_SOCKET -1
