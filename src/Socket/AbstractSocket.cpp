@@ -13,6 +13,12 @@ namespace simpleNET
         // Default to blocking mode
     }
 
+    AbstractSocket::AbstractSocket()
+        : _socketID(INVALID_SOCKET), _iblockingMode(0)
+    {
+        // Default to blocking mode
+    }
+
     AbstractSocket::~AbstractSocket()
     {
         if (_socketID != INVALID_SOCKET)
@@ -36,6 +42,7 @@ namespace simpleNET
     void AbstractSocket::swap(AbstractSocket &otherSocket) noexcept
     {
         std::swap(_socketID, otherSocket._socketID);
+        std::swap(_iblockingMode, otherSocket._iblockingMode);
     }
 
     // Methods
@@ -107,6 +114,19 @@ namespace simpleNET
     bool AbstractSocket::IsBlocking()
     {
         return _iblockingMode == 0;
+    }
+
+    int AbstractSocket::Select(int numfds, fd_set *readfds, fd_set *writefds,
+                               fd_set *exceptfds, timeval *timeout)
+    {
+        int iResult = select(numfds, readfds, writefds, exceptfds, timeout);
+        if (iResult == SOCKET_ERROR)
+        {
+            fprintf(stderr, "Select failed due to error  # %ld\n",
+                    Tools::GetLastErrorCodeID());
+        }
+
+        return iResult;
     }
 
 } // namespace simpleNET

@@ -13,6 +13,9 @@
 // Protocols
 #include "Protocol/TextProtocol.hpp"
 
+// Tools
+#include "Tools.hpp"
+
 
 namespace simpleNET
 {

@@ -6,7 +6,7 @@
   - https://broux.developpez.com/articles/c/sockets/
   - [Guide to network programming](./Guide to Network Programming.pdf)
   - [Libevent](http://www.wangafu.net/~nickm/libevent-book/01_intro.html)
-
+  - [Differences error code](http://itamarst.org/writings/win32sockets.html)
 
 # C++
 ## Standard:

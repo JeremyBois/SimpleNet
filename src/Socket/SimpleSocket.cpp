@@ -4,6 +4,11 @@
 
 namespace simpleNET
 {
+    SimpleSocket::SimpleSocket()
+        : AbstractSocket(INVALID_SOCKET)
+    {
+    }
+
     SimpleSocket::SimpleSocket(SOCKET socketID)
         : AbstractSocket(socketID)
     {

@@ -12,6 +12,7 @@ namespace simpleNET
     class SIMPLENET_API SimpleSocket: public AbstractSocket
     {
         public:
+            SimpleSocket();
             SimpleSocket(SOCKET socketID);
 
         public:

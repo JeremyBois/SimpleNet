@@ -9,7 +9,7 @@ namespace simpleNET
 {
 
     // Singleton class which defines utilitary methods
-    class SIMPLENET_LOCAL Tools
+    class SIMPLENET_API Tools
     {
         private:
             Tools() = delete;

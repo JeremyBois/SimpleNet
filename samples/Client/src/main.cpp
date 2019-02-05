@@ -71,16 +71,19 @@ int main(int argc, char **argv)
     // Try to connect to a website
     // Net::ClientSocket mySocket("www.example.com", 7777);
 
+
+    // SELECT
+    char buffer[2048] = "Bonjour Server.";
+
     // Connect to local server (server must be start first)
     Net::ClientSocket mySocket;
     if (mySocket.Connect("127.0.0.1", 7777))
     {
         // Using Protocol
-        char buffer[2048] {0};
         Net::TextProtocol myProto(mySocket);
 
-        myProto.Receive(buffer);
-        printf("Receive: %s \n", buffer);
+        myProto.Send(buffer);
+        printf("Send: %s \n", buffer);
 
         myProto.Receive(buffer);
         printf("Receive: %s \n", buffer);
