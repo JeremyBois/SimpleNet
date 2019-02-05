@@ -38,15 +38,15 @@ namespace simpleNET
             inline SimpleSocket& GetSocket() { return _attachedSocket; }
 
             // How protocol is working
-            virtual int Send(char* buffer);
+            virtual int Send(char* buffer) = 0;
 
             virtual int Send(char* buffer,
-                             sockaddr* socAdress, socklen_t socAdressLength);
+                             sockaddr* socAdress, socklen_t socAdressLength) = 0;
 
-            virtual int Receive(char* buffer);
+            virtual int Receive(char* buffer) = 0;
 
             virtual int Receive(char* buffer,
-                                sockaddr* socAdress, socklen_t* socAdressLength);
+                                sockaddr* socAdress, socklen_t* socAdressLength) = 0;
     };
 
 } // namespace simpleNET

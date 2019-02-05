@@ -29,6 +29,8 @@ namespace simpleNET
 
         // Now ready to be called
     }
+
+
     ServerSocket::ServerSocket(int port)
         : AbstractSocket(socket(AF_INET, SOCK_STREAM, IPPROTO_TCP))
     {

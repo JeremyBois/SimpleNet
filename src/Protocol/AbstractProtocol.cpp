@@ -25,30 +25,4 @@ namespace simpleNET
         std::swap(_attachedSocket, otherProtocol._attachedSocket);
     }
 
-
-    int AbstractProtocol::Send(char* buffer)
-    {
-        return _attachedSocket.Send(buffer, strlen(buffer), nullptr, 0);
-    }
-
-
-    int AbstractProtocol::Send(char* buffer,
-                               sockaddr* socAdress, socklen_t socAdressLength)
-    {
-        return _attachedSocket.Send(buffer, strlen(buffer), socAdress, socAdressLength);
-    }
-
-
-    int AbstractProtocol::Receive(char* buffer)
-    {
-        return _attachedSocket.Receive(buffer, strlen(buffer), nullptr, nullptr);
-    }
-
-
-    int AbstractProtocol::Receive(char* buffer,
-                                  sockaddr* socAdress, socklen_t* socAdressLength)
-    {
-        return _attachedSocket.Receive(buffer, strlen(buffer), socAdress, socAdressLength);
-    }
-
 } // namespace simpleNET

@@ -19,6 +19,12 @@ namespace simpleNET
 
     int TextProtocol::Send(char* buffer)
     {
+        return Send(buffer, nullptr, 0);
+    }
+
+
+    int TextProtocol::Send(char* buffer, sockaddr* socAdress, socklen_t socAdressLength)
+    {
         int totalSend = 0;
 
         // Get size
@@ -31,19 +37,17 @@ namespace simpleNET
         // Send message
         totalSend += _attachedSocket.Send(buffer, msgSize.size, nullptr, 0);
 
-
         return totalSend;
     }
 
 
-    int TextProtocol::Send(char* buffer,
-                               sockaddr* socAdress, socklen_t socAdressLength)
+    int TextProtocol::Receive(char* buffer)
     {
-        return _attachedSocket.Send(buffer, strlen(buffer), socAdress, socAdressLength);
+        return Receive(buffer, nullptr, 0);
     }
 
 
-    int TextProtocol::Receive(char* buffer)
+    int TextProtocol::Receive(char* buffer, sockaddr* socAdress, socklen_t* socAdressLength)
     {
         int stepRecv = 0;
         int recv = 0;
@@ -60,12 +64,5 @@ namespace simpleNET
         recv += stepRecv;
 
         return recv;
-    }
-
-
-    int TextProtocol::Receive(char* buffer,
-                                  sockaddr* socAdress, socklen_t* socAdressLength)
-    {
-        return _attachedSocket.Receive(buffer, strlen(buffer), socAdress, socAdressLength);
     }
 }
