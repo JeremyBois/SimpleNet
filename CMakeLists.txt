@@ -66,18 +66,22 @@ if (BUILD_SHARED_LIBS)
     # Shared library
     target_include_directories(${MY_LIB_NAME}
         PRIVATE BEFORE ${PROJECT_SOURCE_DIR}/include
+        PRIVATE
+            ${PROJECT_SOURCE_DIR}/extern/Cereal/include
     )
 
     # Set pre processor command for Shared lib export
     target_compile_definitions(${MY_LIB_NAME}
     PRIVATE
         SIMPLENET_SHARED="USED"
-        SIMPLENET_SHARED_EXPORTS="USED"
+        SIMPLEGL_SHARED_EXPORTS="USED"
     )
 else()
     # Static library
     target_include_directories(${MY_LIB_NAME}
         PUBLIC BEFORE ${PROJECT_SOURCE_DIR}/include
+        PUBLIC
+            ${PROJECT_SOURCE_DIR}/extern/Cereal/include
     )
 endif()
 
@@ -116,6 +120,7 @@ if (BUILD_SHARED_LIBS)
     target_include_directories(simpleNET-Client
         PRIVATE
             ${PROJECT_SOURCE_DIR}/Client/include
+            ${PROJECT_SOURCE_DIR}/extern/Cereal/include
     )
 
     # Set pre processor command for Shared lib import
@@ -168,6 +173,7 @@ if (BUILD_SHARED_LIBS)
     target_include_directories(simpleNET-Server
         PRIVATE
             ${PROJECT_SOURCE_DIR}/Server/include
+            ${PROJECT_SOURCE_DIR}/extern/Cereal/include
     )
 
     # Set pre processor command for Shared lib import
