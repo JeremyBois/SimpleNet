@@ -2,6 +2,7 @@
 #include <iostream>
 
 #include <map>
+#include <vector>
 
 
 namespace Net = simpleNET;
@@ -23,36 +24,12 @@ int main(int argc, char **argv)
     Net::ServerSocket servSoc(7777);
     if (servSoc.Listen())
     {
-        // Blocking test
-        // // Init a buffer
-        // char buffer[2048] = "Bonjour Client.";
-        // Net::SimpleSocket clientSoc = servSoc.Accept();
-
-        // // Define communication protocol
-        // Net::TextProtocol myProto(clientSoc);
-
-        // // Send first message
-        // printf("Send : %s  (size = %d)\n", buffer, strlen(buffer));
-        // myProto.Send(buffer);
-
-        // // Change content of buffer
-        // buffer[strlen(buffer)] = '\t';
-        // buffer[16] = 'n';
-        // buffer[17] = 'e';
-        // buffer[18] = 'w';
-
-        // // Send another with same protocol
-        // printf("Send : %s  (size = %d)\n", buffer, strlen(buffer));
-        // myProto.Send(buffer);
-
-
-        // SELECT
-        // Init a buffer
+        // Init buffers
         char buffer[2048] = {0};
         char bufferSend[2048] = "Bonjour Client.";
 
-        // // Mark socket as non-blocking
-        // servSoc.MarkAsNonBlocking();
+        // Mark socket as non-blocking
+        servSoc.MarkAsNonBlocking();
 
         // Init descriptor sets
         fd_set readSet;     // temp file descriptor list for select()
@@ -69,7 +46,6 @@ int main(int argc, char **argv)
 
         // Keep track of sockets
         typedef std::map<int, Net::SimpleSocket> SocketMap;
-        typedef std::pair<int, Net::SimpleSocket> SocketPair;
         SocketMap clientSockets;
 
         while(true)
@@ -79,7 +55,10 @@ int main(int argc, char **argv)
             readSet = masterSet;
 
             // @TODO Change namespace for Select
-            if (Net::SimpleSocket::Select(fdmax + 1, &readSet, nullptr, nullptr, nullptr) != SOCKET_ERROR)
+            int temp = Net::SimpleSocket::Select(fdmax + 1, &readSet, nullptr, nullptr, nullptr);
+            printf("-- %d --", temp);
+
+            if (temp!= SOCKET_ERROR)
             {
                 // run through the existing connections looking for data to read
                 for (unsigned int i = 0; i <= fdmax; i++)
@@ -92,9 +71,6 @@ int main(int argc, char **argv)
                             // A client want to connect
                             Net::SimpleSocket clientSoc = servSoc.Accept();
 
-                            // Move do not copy it to avoid closing the socket
-                            clientSockets.emplace(clientSoc.GetID(), std::move(clientSoc));
-
                             // Add to master set
                             FD_SET(clientSoc.GetID(), &masterSet);
 
@@ -103,39 +79,42 @@ int main(int argc, char **argv)
                             {
                                 fdmax = clientSoc.GetID();
                             }
+
+                            // Move do not copy it to avoid closing the socket
+                            clientSockets.emplace(clientSoc.GetID(), std::move(clientSoc));
                         }
-                        // else
-                        // {
-                        //     // Data to send / receive
-                        //     // Receive using Text protocol
-                        //     Net::TextProtocol myProto(clientSockets[i]);
-                        //     int result = myProto.Receive(buffer);
+                        else
+                        {
+                            // Data to send / receive
+                            // Receive using Text protocol
+                            Net::TextProtocol myProto(clientSockets[i]);
+                            int result = myProto.Receive(buffer);
 
-                        //     if (result == 0 || result == SOCKET_ERROR)
-                        //     {
-                        //         // Client deconnected or error occurs
-                        //         clientSockets.erase(i);
-                        //         FD_CLR(i, &masterSet);
-                        //     }
-                        //     else
-                        //     {
-                        //         // Client try talking !!
-                        //         printf("Receive: %s \n", buffer);
+                            if (result == 0 || result == SOCKET_ERROR)
+                            {
+                                // Client deconnected or error occurs
+                                FD_CLR(i, &masterSet);
+                                clientSockets.erase(i);
+                            }
+                            else
+                            {
+                                // Client try talking !!
+                                printf("Receive: %s \n", buffer);
 
-                        //         // Send message to all other clients
-                        //         for(unsigned int j = 0; j <= fdmax; j++)
-                        //         {
-                        //             if (FD_ISSET(j, &masterSet) &&
-                        //                 j != servSoc.GetID() &&
-                        //                 j != i)
-                        //             {
-                        //                 // Send using Text protocol
-                        //                 Net::TextProtocol myProto(clientSockets[j]);
-                        //                 myProto.Send(bufferSend);
-                        //             }
-                        //         }
-                        //     }
-                        // }
+                                // Send message to all other clients
+                                for(unsigned int j = 0; j <= fdmax; j++)
+                                {
+                                    if (FD_ISSET(j, &masterSet) &&
+                                        j != servSoc.GetID() &&
+                                        j != i)
+                                    {
+                                        // Send using Text protocol
+                                        Net::TextProtocol myProto(clientSockets[j]);
+                                        myProto.Send(bufferSend);
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
             }

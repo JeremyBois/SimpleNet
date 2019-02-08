@@ -92,9 +92,14 @@ namespace simpleNET
 
             if (nbCharRecv == SOCKET_ERROR)
             {
-                // @TODO Handle error code
-                fprintf(stderr, "Receive operation failed (%d / %d received) with error # %ld\n",
-                        dataRead, bufferSize, Tools::GetLastErrorCodeID());
+                int resultCode = Tools::GetLastErrorCodeID();
+                if (resultCode != 10035)
+                {
+                    // @TODO Handle error code
+                    fprintf(stderr, "Receive operation failed (%d / %d received) with error # %ld\n",
+                            dataRead, bufferSize, Tools::GetLastErrorCodeID());
+                }
+
                 break;
             }
             else if (nbCharRecv == 0)

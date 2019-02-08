@@ -6,7 +6,10 @@
 	],
 	"settings": {
 		"files.associations": {
-			"utility": "cpp"
+			"utility": "cpp",
+			"type_traits": "cpp",
+			"xutility": "cpp",
+			"unordered_map": "cpp"
 		}
 	}
 }

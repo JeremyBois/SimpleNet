@@ -6,7 +6,6 @@
 
 
 
-
 struct MyClass
 {
     public:
@@ -57,36 +56,55 @@ int main(int argc, char **argv)
     // Test Cereal
     TestCereal();
 
-
     // Init
     Net::SimpleNetInit();
 
     // Test purpose
     std::cout << "I'm the CLIENT" << std::endl;
 
-    // Test lib import
-    Net::Client aClient;
-    Net::Server aServer;
-
-    // Try to connect to a website
-    // Net::ClientSocket mySocket("www.example.com", 7777);
-
-
-    // SELECT
-    char buffer[2048] = "Bonjour Server.";
 
     // Connect to local server (server must be start first)
-    Net::ClientSocket mySocket;
-    if (mySocket.Connect("127.0.0.1", 7777))
+    Net::ClientSocket clientSoc;
+    if (clientSoc.Connect("127.0.0.1", 7777))
     {
-        // Using Protocol
-        Net::TextProtocol myProto(mySocket);
+        // Init buffers
+        char buffer[2048] = {0};
+        char bufferSend[2048] = "Bonjour Server.";
 
+        // Using Protocol
+        Net::TextProtocol myProto(clientSoc);
+
+        // Send first connection
         myProto.Send(buffer);
         printf("Send: %s \n", buffer);
 
-        myProto.Receive(buffer);
-        printf("Receive: %s \n", buffer);
+        // Mark socket as non-blocking
+        clientSoc.MarkAsNonBlocking();
+
+        // Will loop now
+        while(true)
+        {
+
+            // Data to send / receive
+            // Receive using Text protocol
+            Net::TextProtocol myProto(clientSoc);
+            int result = myProto.Receive(buffer);
+
+            if (result == 0 || result == SOCKET_ERROR)
+            {
+                if (Net::Tools::GetLastErrorCodeID() != 10035)
+                {
+                    // Client deconnected or error occurs
+                    printf("Bye Bye");
+                    break;
+                }
+            }
+            else
+            {
+                printf("Send: %s with result %d\n", buffer, result);
+            }
+
+        }
     }
 
     // Clean
