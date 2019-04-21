@@ -16,11 +16,11 @@ namespace simpleNET
             SimpleSocket(SOCKET socketID);
 
         public:
-            virtual int Send(char* buffer, int bufferSize);
-            virtual int Send(char* buffer, int bufferSize,
+            int Send(char* buffer, int bufferSize);
+            int Send(char* buffer, int bufferSize,
                              sockaddr* socAdress, socklen_t socAdressLength);
-            virtual int Receive(char* buffer, int bufferSize);
-            virtual int Receive(char* buffer, int bufferSize,
+            int Receive(char* buffer, int bufferSize);
+            int Receive(char* buffer, int bufferSize,
                                 sockaddr* socAdress, socklen_t* socAdressLength);
 
         protected:
