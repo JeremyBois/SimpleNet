@@ -11,11 +11,11 @@ namespace simpleNET
     class SIMPLENET_LOCAL AbstractProtocol
     {
         protected:
-            SimpleSocket& _attachedSocket;
+            SimpleSocket* _attachedSocket;
 
         protected:
             // Can only be created by a children instance
-            AbstractProtocol(SimpleSocket& socket);
+            AbstractProtocol(SimpleSocket* socket);
 
             // Disable copy
             AbstractProtocol(AbstractProtocol const &otherProtocol)            = delete;
@@ -35,7 +35,7 @@ namespace simpleNET
             virtual ~AbstractProtocol() = default;
 
         public:
-            inline SimpleSocket& GetSocket() { return _attachedSocket; }
+            inline SimpleSocket* GetSocket() { return _attachedSocket; }
 
             // How protocol is working
             virtual int Send(char* buffer) = 0;

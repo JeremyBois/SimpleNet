@@ -10,7 +10,7 @@ namespace simpleNET
     class SIMPLENET_API TextProtocol: public AbstractProtocol
     {
         public:
-            TextProtocol(SimpleSocket& socket);
+            TextProtocol(SimpleSocket* socket);
 
             // How protocol is working
             virtual int Send(char* buffer) override;

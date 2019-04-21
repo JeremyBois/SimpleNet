@@ -64,7 +64,7 @@ int main(int argc, char **argv)
 
 
     // Connect to local server (server must be start first)
-    Net::ClientSocket clientSoc;
+    Net::TCPsocket clientSoc(false);
     if (clientSoc.Connect("127.0.0.1", 7777))
     {
         // Init buffers
@@ -72,22 +72,21 @@ int main(int argc, char **argv)
         char bufferSend[2048] = "Bonjour Server.";
 
         // Using Protocol
-        Net::TextProtocol myProto(clientSoc);
+        Net::TextProtocol myProto(&clientSoc);
 
         // Send first connection
-        myProto.Send(buffer);
-        printf("Send: %s \n", buffer);
+        myProto.Send(bufferSend);
+        printf("Send: %s \n", bufferSend);
 
         // Mark socket as non-blocking
-        clientSoc.MarkAsNonBlocking();
+        // clientSoc.MarkAsNonBlocking();
 
         // Will loop now
         while(true)
         {
-
             // Data to send / receive
             // Receive using Text protocol
-            Net::TextProtocol myProto(clientSoc);
+            Net::TextProtocol myProto(&clientSoc);
             int result = myProto.Receive(buffer);
 
             if (result == 0 || result == SOCKET_ERROR)
@@ -101,7 +100,7 @@ int main(int argc, char **argv)
             }
             else
             {
-                printf("Send: %s with result %d\n", buffer, result);
+                printf("Receive: %s with result %d\n", buffer, result);
             }
 
         }

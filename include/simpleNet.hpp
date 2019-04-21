@@ -6,9 +6,9 @@
 #include "Server.hpp"
 
 // Sockets (low level API)
-#include "Socket/SimpleSocket.hpp"
-#include "Socket/ClientSocket.hpp"
-#include "Socket/ServerSocket.hpp"
+// #include "Socket/SimpleSocket.hpp"
+#include "Socket/TCPsocket.hpp"
+#include "Socket/UDPsocket.hpp"
 
 // Protocols
 #include "Protocol/TextProtocol.hpp"

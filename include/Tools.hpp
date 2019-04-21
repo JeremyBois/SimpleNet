@@ -31,10 +31,12 @@ namespace simpleNET
 
             /// Find TCP adresses
             static int GetTCPAdresses(const std::string &ipAdress, int port,
+                                      ADDRESS_FAMILY family,
                                       addrinfo *&infosContainer);
 
             /// Find UDP adresses
             static int GetUDPAdresses(const std::string &ipAdress, int port,
+                                      ADDRESS_FAMILY family,
                                       addrinfo *&infosContainer);
 
             /// Retrieve adress service from socket adress (unsafe)

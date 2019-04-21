@@ -49,13 +49,15 @@ namespace simpleNET
         return dwRetval;
     }
 
-    int Tools::GetTCPAdresses(const std::string &ipAdress, int port, addrinfo *&infosContainer)
+    int Tools::GetTCPAdresses(const std::string &ipAdress, int port, ADDRESS_FAMILY family,
+                              addrinfo *&infosContainer)
     {
         // Find informations
         addrinfo hints;
         memset(&hints, 0, sizeof(hints)); // make sure the struct is empty
-        hints.ai_family = AF_UNSPEC;      // don't care IPv4 or IPv6
+        hints.ai_family = family;         // IPv4 or IPv6
         hints.ai_socktype = SOCK_STREAM;  // TCP stream sockets
+        hints.ai_protocol = IPPROTO_TCP;  // Force protocol ??
         hints.ai_flags = AI_PASSIVE;      // fill in my IP for me
         int status = getaddrinfo(ipAdress.c_str(),
                                  std::to_string(port).c_str(),
@@ -64,13 +66,15 @@ namespace simpleNET
         return status;
     }
 
-    int Tools::GetUDPAdresses(const std::string &ipAdress, int port, addrinfo *&infosContainer)
+    int Tools::GetUDPAdresses(const std::string &ipAdress, int port, ADDRESS_FAMILY family,
+                              addrinfo *&infosContainer)
     {
         // Find informations
         addrinfo hints;
         memset(&hints, 0, sizeof(hints)); // make sure the struct is empty
-        hints.ai_family = AF_UNSPEC;      // don't care IPv4 or IPv6
+        hints.ai_family = family;         // IPv4 or IPv6
         hints.ai_socktype = SOCK_DGRAM;   // UDP stream sockets
+        hints.ai_protocol = IPPROTO_UDP;  // Force protocol ??
         hints.ai_flags = AI_PASSIVE;      // fill in my IP for me
         int status = getaddrinfo(ipAdress.c_str(),
                                  std::to_string(port).c_str(),

@@ -11,7 +11,7 @@ namespace simpleNET
     };
 
 
-    TextProtocol::TextProtocol(SimpleSocket& socket)
+    TextProtocol::TextProtocol(SimpleSocket* socket)
         : AbstractProtocol(socket)
     {
     }
@@ -32,10 +32,10 @@ namespace simpleNET
         msgSize.size = strlen(buffer);
 
         // Send size first
-        totalSend += _attachedSocket.Send(msgSize.buff, sizeof(size_t), nullptr, 0);
+        totalSend += _attachedSocket->Send(msgSize.buff, sizeof(size_t), nullptr, 0);
 
         // Send message
-        totalSend += _attachedSocket.Send(buffer, msgSize.size, nullptr, 0);
+        totalSend += _attachedSocket->Send(buffer, msgSize.size, nullptr, 0);
 
         return totalSend;
     }
@@ -54,12 +54,12 @@ namespace simpleNET
 
         // Get size
         char sizeBuffer[sizeof(size_t)];
-        stepRecv = _attachedSocket.Receive(sizeBuffer, sizeof(size_t), nullptr, 0);
+        stepRecv = _attachedSocket->Receive(sizeBuffer, sizeof(size_t), nullptr, 0);
         recv += stepRecv;
 
         // Get text and null terminate it
         int dataSize = *(int*)sizeBuffer;
-        stepRecv = _attachedSocket.Receive(buffer, dataSize, nullptr, nullptr);
+        stepRecv = _attachedSocket->Receive(buffer, dataSize, nullptr, nullptr);
         buffer[stepRecv] = '\0';
         recv += stepRecv;
 

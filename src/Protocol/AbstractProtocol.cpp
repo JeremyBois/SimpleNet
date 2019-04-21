@@ -3,7 +3,7 @@
 
 namespace simpleNET
 {
-    AbstractProtocol::AbstractProtocol(SimpleSocket& socket)
+    AbstractProtocol::AbstractProtocol(SimpleSocket* socket)
         : _attachedSocket(socket)
     {
     }

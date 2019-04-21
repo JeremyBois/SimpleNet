@@ -21,15 +21,15 @@ int main(int argc, char **argv)
     Net::Server aServer;
 
     // Start server and wait for client
-    Net::ServerSocket servSoc(7777);
+    Net::TCPsocket servSoc(7777);
     if (servSoc.Listen())
     {
         // Init buffers
         char buffer[2048] = {0};
-        char bufferSend[2048] = "Bonjour Client.";
+        char bufferSend[2048] = "A new client just arrived, talk to him...";
 
         // Mark socket as non-blocking
-        servSoc.MarkAsNonBlocking();
+        // servSoc.MarkAsNonBlocking();
 
         // Init descriptor sets
         fd_set readSet;     // temp file descriptor list for select()
@@ -45,7 +45,7 @@ int main(int argc, char **argv)
         FD_SET(servSoc.GetID(), &masterSet);
 
         // Keep track of sockets
-        typedef std::map<int, Net::SimpleSocket> SocketMap;
+        typedef std::map<int, Net::TCPsocket> SocketMap;
         SocketMap clientSockets;
 
         while(true)
@@ -55,7 +55,7 @@ int main(int argc, char **argv)
             readSet = masterSet;
 
             // @TODO Change namespace for Select
-            int temp = Net::SimpleSocket::Select(fdmax + 1, &readSet, nullptr, nullptr, nullptr);
+            int temp = Net::TCPsocket::Select(fdmax + 1, &readSet, nullptr, nullptr, nullptr);
             printf("-- %d --", temp);
 
             if (temp!= SOCKET_ERROR)
@@ -69,7 +69,7 @@ int main(int argc, char **argv)
                         if (i == servSoc.GetID())
                         {
                             // A client want to connect
-                            Net::SimpleSocket clientSoc = servSoc.Accept();
+                            Net::TCPsocket clientSoc = servSoc.Accept();
 
                             // Add to master set
                             FD_SET(clientSoc.GetID(), &masterSet);
@@ -87,7 +87,7 @@ int main(int argc, char **argv)
                         {
                             // Data to send / receive
                             // Receive using Text protocol
-                            Net::TextProtocol myProto(clientSockets[i]);
+                            Net::TextProtocol myProto(&clientSockets[i]);
                             int result = myProto.Receive(buffer);
 
                             if (result == 0 || result == SOCKET_ERROR)
@@ -109,7 +109,7 @@ int main(int argc, char **argv)
                                         j != i)
                                     {
                                         // Send using Text protocol
-                                        Net::TextProtocol myProto(clientSockets[j]);
+                                        Net::TextProtocol myProto(&clientSockets[j]);
                                         myProto.Send(bufferSend);
                                     }
                                 }

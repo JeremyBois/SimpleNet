@@ -8,15 +8,19 @@
 namespace simpleNET
 {
     AbstractSocket::AbstractSocket(SOCKET socketID)
-        : _socketID(socketID), _iblockingMode(0)
+        : _socketID(socketID)
     {
         // Default to blocking mode
+        if (_socketID != INVALID_SOCKET)
+        {
+            SetAsBlocking(true);
+        }
+
     }
 
     AbstractSocket::AbstractSocket()
-        : _socketID(INVALID_SOCKET), _iblockingMode(0)
+        : _socketID(INVALID_SOCKET)
     {
-        // Default to blocking mode
     }
 
     AbstractSocket::~AbstractSocket()
@@ -62,15 +66,6 @@ namespace simpleNET
         // First check for previous mode
         u_long newMode = shouldBlock ? 0 : 1;
 
-        if (_iblockingMode == newMode)
-        {
-            if (_iblockingMode == 0)
-                fprintf(stderr, "Socket already set as blocking. Nothing done.\n");
-            else
-                fprintf(stderr, "Socket already set as non-blocking. Nothing done.\n");
-            return false;
-        }
-
         // Start updating state
         int iResult = SOCKET_ERROR;
 
@@ -103,12 +98,28 @@ namespace simpleNET
 
     bool AbstractSocket::MarkAsBlocking()
     {
-        return SetAsBlocking(true);
+        if (_iblockingMode == 0)
+        {
+            fprintf(stderr, "Socket already set as blocking. Nothing done.\n");
+            return true;
+        }
+        else
+        {
+            return SetAsBlocking(true);
+        }
     }
 
     bool AbstractSocket::MarkAsNonBlocking()
     {
-        return SetAsBlocking(false);
+        if (_iblockingMode == 0)
+        {
+            fprintf(stderr, "Socket already set as non-blocking. Nothing done.\n");
+            return true;
+        }
+        else
+        {
+            return SetAsBlocking(false);
+        }
     }
 
     bool AbstractSocket::IsBlocking()
@@ -127,6 +138,118 @@ namespace simpleNET
         }
 
         return iResult;
+    }
+
+    void AbstractSocket::Bind(sockaddr_in &sockAdressV4)
+    {
+        // Link socket to communication port
+        if (bind(GetID(), (sockaddr *)&sockAdressV4, sizeof(sockAdressV4)) != 0)
+        {
+            fprintf(stderr, "Server binding error  (%d)\n",
+                    Tools::GetLastErrorCodeID());
+            Close();
+        }
+        else
+        {
+            // Find informations
+            std::string name;
+            std::string portUsed;
+            int dwRetval = Tools::GetAdressAndService((sockaddr *)&sockAdressV4,
+                                                      sizeof(sockAdressV4), name, portUsed);
+
+            fprintf(stdout, "Server bind to port %s (%s)\n",
+                    portUsed.c_str(), name.c_str());
+        }
+    }
+
+    void AbstractSocket::Bind(sockaddr_in6 &sockAdressV6)
+    {
+        // Link socket to communication port
+        if (bind(GetID(), (sockaddr *)&sockAdressV6, sizeof(sockAdressV6)) != 0)
+        {
+            fprintf(stderr, "Server binding error  (%d)\n",
+                    Tools::GetLastErrorCodeID());
+            Close();
+        }
+        else
+        {
+            // Find informations
+            std::string name;
+            std::string portUsed;
+            int dwRetval = Tools::GetAdressAndService((sockaddr *)&sockAdressV6,
+                                                      sizeof(sockAdressV6), name, portUsed);
+
+            fprintf(stdout, "Server bind to port %s (%s)\n",
+                    portUsed.c_str(), name.c_str());
+        }
+    }
+
+    void AbstractSocket::Bind(const std::string &addr, unsigned short port, ADDRESS_FAMILY family)
+    {
+        // Construct IPv6 or IPv4
+        if (family == AF_INET6)
+        {
+            sockaddr_in6 sockAdress;
+            memset(&sockAdress, 0, sizeof(sockAdress)); // make sure the struct is empty
+
+            sockAdress.sin6_family = family;
+            // Specific adress
+            inet_pton(PF_INET6, addr.c_str(), &sockAdress.sin6_addr);
+            // Handle difference between little-endian and big-endian
+            // https://stackoverflow.com/questions/19207745/htons-function-in-socket-programing#19209503
+            sockAdress.sin6_port = htons(port);
+
+            Bind(sockAdress);
+        }
+        else
+        {
+            sockaddr_in sockAdress;
+            memset(&sockAdress, 0, sizeof(sockAdress)); // make sure the struct is empty
+
+            sockAdress.sin_family = family;
+            // Specific adress
+            inet_pton(PF_INET, addr.c_str(), &sockAdress.sin_addr.s_addr);
+            // Handle difference between little-endian and big-endian
+            // https://stackoverflow.com/questions/19207745/htons-function-in-socket-programing#19209503
+            sockAdress.sin_port = htons(port);
+
+            Bind(sockAdress);
+        }
+
+
+    }
+
+    void AbstractSocket::BindAll(unsigned short port, ADDRESS_FAMILY family)
+    {
+        // Construct IPv6 or IPv4
+        if (family == AF_INET6)
+        {
+            sockaddr_in6 sockAdress;
+            memset(&sockAdress, 0, sizeof(sockAdress)); // make sure the struct is empty
+            sockAdress.sin6_family = AF_INET;
+            // Bound to all interfaces (0.0.0.0)
+            // https://stackoverflow.com/questions/16508685/understanding-inaddr-any-for-socket-programming
+            sockAdress.sin6_addr = IN6ADDR_ANY_INIT;
+            // Handle difference between little-endian and big-endian
+            //https://stackoverflow.com/questions/19207745/htons-function-in-socket-programing#19209503
+            sockAdress.sin6_port = htons(port);
+
+            Bind(sockAdress);
+        }
+        else
+        {
+            sockaddr_in sockAdress;
+            memset(&sockAdress, 0, sizeof(sockAdress)); // make sure the struct is empty
+            sockAdress.sin_family = AF_INET;
+            // Bound to all interfaces (0.0.0.0)
+            // https://stackoverflow.com/questions/16508685/understanding-inaddr-any-for-socket-programming
+            sockAdress.sin_addr.s_addr = htonl(INADDR_ANY);
+            // Handle difference between little-endian and big-endian
+            //https://stackoverflow.com/questions/19207745/htons-function-in-socket-programing#19209503
+            sockAdress.sin_port = htons(port);
+
+            Bind(sockAdress);
+        }
     }
 
 } // namespace simpleNET

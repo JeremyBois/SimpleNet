@@ -28,6 +28,10 @@ namespace simpleNET
             AbstractSocket(const AbstractSocket &otherSocket)            = delete;
             AbstractSocket &operator=(AbstractSocket const &otherSocket) = delete;
 
+        protected:
+            void Bind(sockaddr_in  &sockAdressV4);
+            void Bind(sockaddr_in6 &sockAdressV6);
+
         public:
             AbstractSocket();
 
@@ -47,6 +51,9 @@ namespace simpleNET
             bool         MarkAsBlocking();
             bool         MarkAsNonBlocking();
             bool         IsBlocking();
+            void         Bind(const std::string& addr, unsigned short port=0,
+                              ADDRESS_FAMILY family=AF_INET);
+            void         BindAll(unsigned short port=0, ADDRESS_FAMILY family=AF_INET);
 
             /// Wrapper around select.
             /// numfds Only needed with berkeley socket (Unix)
