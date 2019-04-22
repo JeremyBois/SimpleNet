@@ -10,7 +10,7 @@ namespace simpleNET
     class SIMPLENET_API TCPsocket : public SimpleSocket
     {
     public:
-        /// Construct a TCP socket (Invalid until Connect)
+        /// Construct a TCP socket without any binding
         TCPsocket(bool ipV6 = false);
         /// Construct a TCP socket bind to this ipAddress and port
         TCPsocket(const std::string &ipAddress, int port, bool ipV6 = false);

@@ -11,8 +11,8 @@ namespace simpleNET
 
     }
 
-    TCPsocket::TCPsocket(SOCKET sock)
-        : SimpleSocket(sock)
+    TCPsocket::TCPsocket(SOCKET socketID)
+        : SimpleSocket(socketID)
     {
 
     }
